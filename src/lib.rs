@@ -15,16 +15,16 @@ use std::path::Path;
 
 use std::fs::File;
 
-struct RecursiveZipWriter<W: Write + Seek> {
+pub struct RecursiveZipWriter<W: Write + Seek> {
     zip_writer: ZipWriter<W>,
 }
 
 impl<W: Write + Seek> RecursiveZipWriter<W> {
-    fn new(inner: W) -> Self {
+    pub fn new(inner: W) -> Self {
         RecursiveZipWriter { zip_writer: ZipWriter::new(inner) }
     }
 
-    fn add_path_renamed(&mut self, real_path: &Path, zip_path: &Path) -> Result<(), ZipError> {
+    pub fn add_path_renamed(&mut self, real_path: &Path, zip_path: &Path) -> Result<(), ZipError> {
         if real_path.is_file() {
             self.zip_writer
                 .start_file(zip_path.to_string_lossy().into_owned(),
@@ -45,11 +45,11 @@ impl<W: Write + Seek> RecursiveZipWriter<W> {
         }
     }
 
-    fn add_path(&mut self, real_path: &Path) -> Result<(), ZipError> {
+    pub fn add_path(&mut self, real_path: &Path) -> Result<(), ZipError> {
         self.add_path_renamed(real_path, &Path::new(real_path.file_name().unwrap()))
     }
 
-    fn finish(&mut self) -> ZipResult<W> {
+    pub fn finish(&mut self) -> ZipResult<W> {
         self.zip_writer.finish()
     }
 }
