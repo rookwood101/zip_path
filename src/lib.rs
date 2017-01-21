@@ -7,9 +7,9 @@ use zip::result::ZipError;
 
 use std::io::Write;
 use std::io::Seek;
-use std::io::Read;
 use std::io::Error as IoError;
 use std::io::ErrorKind as IoErrorKind;
+use std::io::copy;
 
 use std::path::Path;
 
@@ -29,9 +29,8 @@ impl<W: Write + Seek> RecursiveZipWriter<W> {
             self.zip_writer
                 .start_file(zip_path.to_string_lossy().into_owned(),
                             FileOptions::default())?;
-            let mut buffer = Vec::new();
-            File::open(real_path).unwrap().read_to_end(&mut buffer)?;
-            self.zip_writer.write(&buffer)?;
+            let mut file = File::open(real_path).unwrap();
+            copy(&mut file, &mut self.zip_writer)?;
             Ok(())
         } else if real_path.is_dir() {
             for listing in real_path.read_dir().unwrap() {
