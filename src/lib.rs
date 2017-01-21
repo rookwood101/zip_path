@@ -35,7 +35,8 @@ impl<W: Write + Seek> RecursiveZipWriter<W> {
         } else if real_path.is_dir() {
             for listing in real_path.read_dir().unwrap() {
                 let file_name = listing.unwrap().file_name();
-                self.add_path_renamed(&real_path.join(&file_name), &zip_path.join(&file_name))?;
+                self.add_path_renamed(&real_path.join(&file_name), &zip_path.join(&file_name))
+                    .unwrap_or(());
             }
             Ok(())
         } else {
