@@ -1,0 +1,7 @@
+[package]
+name = "zip_path"
+version = "0.1.0"
+authors = ["rookwood101 <alexandersadler1@gmail.com>"]
+
+[dependencies]
+zip = "0.2.0"
